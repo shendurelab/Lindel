@@ -1,5 +1,6 @@
 #!/usr/bin/env python 
 # Author: Will Chen
+from Seq_analysis import *
 import subprocess
 import numpy as np
 import os,sys
@@ -10,34 +11,6 @@ from umi_tools._dedup_umi import edit_distance
 import pickle as pkl
 import re
 from Bio import pairwise2
-
-def read_fasta(filename):
-    """Read the aligned fasta file"""
-    rnames, reads = [], []
-    with open(filename,'r') as FASTA:
-        for line in FASTA:
-            if line[0] == '>':
-                rnames.append(line.rstrip().split(' ')[0][1:])
-                try:
-                    reads.append(seq)
-                except NameError:
-                    pass
-                seq=''
-            else:
-                seq += line.rstrip()
-        reads.append(seq)
-    FASTA.closed
-    return rnames, reads
-
-def min_edit(array,seq):
-    m = 20
-    ref=''
-    for s in array.keys():
-        dis = edit_distance(s.encode('UTF-8'),seq.encode('UTF-8'))
-        if dis <= m:
-            m = dis
-            ref = s
-    return [ref,m]
 
 workdir = sys.argv[1] 
 sample  = sys.argv[2] 
@@ -126,18 +99,23 @@ for i in range(len(temp_matrix)):
 for i in range(len(temp_matrix)):
     read = temp_matrix[i]
     if read[7] != None and temp_matrix[i,-2]!= 'template switch':
-        s1, s2 = read[0].replace('-',''),read[1].replace('-','')
-        alignments = pairwise2.align.globalms(s1, s2,5,-4,-13,-0.5,penalize_end_gaps=False) 
-        if alignments:
-            idx = alignments[-1][1].find(read[6][0:10])
-            temp_matrix[i][0:2] = alignments[-1][0][idx:],alignments[-1][1][idx:] # Here are we are taking the last alignment in the array, in which the deletion is right aligned. 
-            temp_matrix[i,8] = temp_matrix[i,1].replace('-','')[100:].find(read[6]) +100
-            idx2 = alignments[-1][1][100:].find(read[6][0:10])+100
-            temp_matrix[i][2] = alignments[-1][0][0:20]
-            temp_matrix[i][3] = alignments[-1][0][idx2:idx2+20]
-            temp_matrix[i][4] = edit_distance(temp_matrix[i][2].encode('UTF-8'),temp_matrix[i][3].encode('UTF-8'))
-            if temp_matrix[i,8]==99:
+        if '---' not in read[0][0:95] and '--' not in read[1][0:95]: # remove reads with indels in sgRNA or every large deletions(>45bp deletions,checked this before and it's only have a few counts.)
+            if '-' in read[0][0:95] or '-' in read[1][0:95]:
+                temp_matrix[i,-1] = '1bp indels'
+            s1, s2 = read[0][95:200].replace('-',''),read[1][95:200].replace('-','')
+            alignments = pairwise2.align.globalms(s1, s2,5,-4,-13,-0.5,penalize_end_gaps=False) 
+            if alignments:
+                temp_matrix[i][0:2] = alignments[-1][0],alignments[-1][1] # Here are we are taking the last alignment in the array, in which the deletion is right aligned. 
+                temp_matrix[i,8] = temp_matrix[i,1][20:].replace('-','').find(read[6])+20
+                idx2 = alignments[-1][1][20:].find(read[6][0:10])+20
+                temp_matrix[i][3] = alignments[-1][0][idx2:idx2+20]
+                temp_matrix[i][4] = edit_distance(temp_matrix[i][2].encode('UTF-8'),temp_matrix[i][3].encode('UTF-8'))
+                if temp_matrix[i,8]==19:
+                    temp_matrix[i,7] = None
+            else:
                 temp_matrix[i,7] = None
+        else:
+            temp_matrix[i,7] = None
 
 # Step 4. Assign indels 
 for i in range(len(temp_matrix)):
@@ -189,9 +167,8 @@ for i in range(len(temp_matrix)):
                         if x.intersection(y1):
                             temp_matrix[i,9:13] = 'ins',loc[0]-ss,loc[1]-loc[0],read[loc[0]:loc[1]]
         else:
-            if '--' not in read and '-' not in ref:
-                idx = temp_matrix[i,0].find(temp_matrix[i,2]) # check if there is any deletions in tracRNA
-                temp_matrix[i,9] = 'WT' if '-' not in temp_matrix[i,0][idx+1:idx+105] else 'Trash' # idx may
+            if '-' not in read and '-' not in ref and temp_matrix[i,-1]!='1bp indels':
+                temp_matrix[i,9] = 'WT' # idx may
             else:
                 temp_matrix[i,9] = 'Trash'
 
@@ -204,11 +181,74 @@ final_matrix = np.array([read for read in temp_matrix if read[3]+read[2] not in 
 for i in range(len(final_matrix)):
     read = final_matrix[i]
     if read[7] != None:
-        s1, s2 = read[0][100:-15].replace('-',''),read[1][100:-15].replace('-','')
-        ali1 = pairwise2.align.globalms(s1, s2,5,-4,-20,-0.5)
-        ali2 = pairwise2.align.globalms(s1, s2,5,-4,-10,-0.4)
+        s1, s2 = read[0].replace('-',''),read[1].replace('-','')
+        ali1 = pairwise2.align.globalms(s1, s2,5,-4,-13,-0.5) # penalty for gap was 13 before and now switch to 20
+        ali2 = pairwise2.align.globalms(s1, s2,5,-4,-9.5,-0.4)
         if ali1[-1][0] != ali2[-1][0] or ali1[-1][1] != ali2[-1][1]:
             final_matrix[i][-1] = 'realigned'
+
+for i in range(len(final_matrix)):
+    if final_matrix[i,9]!='WT' and final_matrix[i,10]>17:
+        read  = final_matrix[i,0]
+        ref   = final_matrix[i,1]
+        s1, s2 = read[30:].replace('-',''),ref[30:].replace('-','')
+        ali = pairwise2.align.globalms(s1, s2,5,-4,-10,-0.3)
+        shift = final_matrix[i,10]-17
+        if len(ali)>shift and final_matrix[i,9]=='del':
+            final_matrix[i,0:2] = read[0:30]+ali[-1-shift][0],ref[0:30]+ali[-1-shift][1] 
+        elif len(ali)<=shift and final_matrix[i,9]=='del':
+            final_matrix[i,0:2] = read[0:30]+ali[0][0],ref[0:30]+ali[0][1]
+        elif len(ali)>shift and final_matrix[i,9]=='ins':
+            final_matrix[i,0:2] = read[0:30]+ali[-1-shift][0],ref[0:30]+ali[-1-shift][1]
+        else:
+            final_matrix[i,0:2] = read[0:30]+ali[0][0],ref[0:30]+ali[0][1]
+        read  = final_matrix[i,0]
+        ref   = final_matrix[i,1]
+        ss = final_matrix[i,1].find(final_matrix[i,6][0:10])
+        cs = ss +17 # Define start site of the target
+        s1,s2 = re.split('[AGCTN]+',ref), re.split('[AGCTN]+',read)
+        if '-' in read[cs-3:cs+2]:
+            if len(s1) == 2:
+                if len(s2)<6: 
+                    locs=[]
+                    for pattern in s2[1:-1]:
+                        if len(locs)==0:
+                            temp = list(re.search(r"\b"+pattern+r"\b", read).span())
+                            locs.append(temp)
+                        else:
+                            temp = [s+locs[-1][1] for s in list(re.search(r"\b"+pattern+r"\b", read[locs[-1][1]:]).span())]
+                            locs.append(temp)
+                    y1,y2  = set(range(cs-5,cs+5)),set(range(cs-2,cs+2))
+                    for loc in locs:
+                        x=set(range(loc[0],loc[1]))
+                        if len(x) ==1:
+                            if x.intersection(y2):
+                                final_matrix[i,9:12] = 'del',loc[0]-ss,loc[1]-loc[0]
+                        else:
+                            if x.intersection(y1):
+                                final_matrix[i,9:12] = 'del',loc[0]-ss,loc[1]-loc[0]
+    # Label insertion
+        elif '-' in ref[cs-3:cs+2]:
+            if max([len(x) for x in s2[0:-1]]) <= 1:
+        # May have indels. only count for the read with 1 deletion.
+                locs=[]
+                for pattern in s1[1:-1]:
+                    if len(locs)==0:
+                        temp = list(re.search(r"\b"+pattern+r"\b", ref).span())
+                        locs.append(temp)
+                    else:
+                        temp = [s+locs[-1][1] for s in list(re.search(r"\b"+pattern+r"\b", ref[locs[-1][1]:]).span())]
+                        locs.append(temp)
+                y1,y2  = set(range(cs-5,cs+5)),set(range(cs-2,cs+2))  
+                for loc in locs:
+                    x=set(range(loc[0],loc[1]))
+                    if len(x) ==1:
+                        if x.intersection(y2):
+                            final_matrix[i,9:14] = 'ins',loc[0]-ss,loc[1]-loc[0],read[loc[0]:loc[1]],read[loc[0]-1]
+                    else:
+                        if x.intersection(y1):
+                            final_matrix[i,9:14] = 'ins',loc[0]-ss,loc[1]-loc[0],read[loc[0]:loc[1]],read[loc[0]-1]
+
 
 # For 1bp deletion, alignment index changed
 for i in range(len(final_matrix)):
