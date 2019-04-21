@@ -1,52 +1,13 @@
 <!DOCTYPE html>
 <html  lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="description" content="Lindel, A Logistic regression model for accurate indel prediction">
-  <!-- Load required style files
-  <link rel="stylesheet" href="{{ "{{site.baseurl}}/css/main.css" }}">
-  <link rel="stylesheet" href="{{ "{{site.baseurl}}/css/app.css" }}">
-  <link rel="stylesheet" href="{{ "{{site.baseurl}}/css/prism-darcula.css" }}">  -->
-  <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="css/app.css" />
-  <link rel="stylesheet" href="css/prism-darcula.css"/> 
-  <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.css">
-
-  <!-- Load required js files-->
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
-  <script type="text/javascript" src="js/jquery.min.js"></script>
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/prism.js"></script>
-  <script type="text/javascript" src="js/prism.r.js"></script>
-  <!-- 
-  <script type="text/javascript" src="{{ url_for('static', filename='prism.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='prism.r.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-toc.min.js') }}"></script>-->
-  <title>Lindel</title>
-</head>
+  {% include head.html %}
 
 
 <body>
-  <div class="container-fullwidth">
-    <nav class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <a class="navbar-brand">Lindel</a>
-          <li><a href="docs/">Documentation</a></li>
-          <li><a href="data/">Online tool</a></li>
-          <li><a href="https://github.com/shendurelab/Lindel">GitHub</a></li>
-        </ul>
-      </div>
-    </div>
-    </nav>
-  </div>
+  {% include header.html %}
 
   <section class="container fifty" style="max-width: 1000px">
-    <img src="images/Modeling_layout.png">
+    <img src="images/Modeling_layout.png" width 700>
   </section>
   <div class="hugespacer"></div>
 
