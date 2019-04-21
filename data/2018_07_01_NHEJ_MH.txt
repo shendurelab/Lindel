@@ -1,2 +1,0 @@
-sample	umi	reference	outdir	fastq1	fastq2	barcode1	barcode2	umi_correction	threshold	Merge
-NHEJ_MH	TRUE	NHEJ_MH_gDNA.fasta	pipeline_output/	MH_lib_S1_R1_001.fastq.gz	MH_lib_S1_R2_001.fastq.gz	NNNNNNNNNNNNNNN	None	FALSE	10	TRUE	30G

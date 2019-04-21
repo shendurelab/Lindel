@@ -1,23 +1,4 @@
-#System tools 
-import os,sys,csv,re
-from re import findall
-import collections
-import itertools
-from collections import Counter
 
-# Usefule modules
-import numpy as np
-from math import exp
-from random import randint
-from Bio import SeqIO
-from Bio import pairwise2
-from Bio.SeqRecord import SeqRecord
-
-# Umitools
-import pyximport
-pyximport.install(build_in_temp=False)
-from umi_tools._dedup_umi import edit_distance
-import edlib
 """Functions used in this pipeline"""
 
 def reverse_complement(seq):
@@ -99,6 +80,32 @@ def seq_com(seq,ref,length):
             break
     return array
 
+def seq_count(sample):
+    count = {}
+    for read in sample:
+        seq = read[6]
+        if seq in count:
+            count[seq] +=1
+        else:
+            count[seq] =1
+    return count
+
+def indel_count(sample):
+    count = {}
+    for read in sample:
+        seq = read[6]
+        if read[9]=='del':
+            if seq in count:
+                count[seq] += 1
+            else:
+                count[seq] = 1
+        elif read[9] =='ins':
+            if seq in count:
+                count[seq] += 1
+            else:
+                count[seq] = 1
+    return count
+
 def parse_patterns(pattern):
     p = re.split('N',pattern)
     umi_length = pattern.count('N')
@@ -156,7 +163,6 @@ def cal_entropy(array):
     p = [x/t for x in array if x!=0]
     entro = -sum([np.log2(x)*x for x in p if x!=0])
     return entro
-
 
 def read_editing_file(filename):
     data = []

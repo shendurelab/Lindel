@@ -1,0 +1,4 @@
+sample	umi	reference	outdir	fastq1	fastq2	barcode1	barcode2	umi_correction	threshold	Merge
+NHEJ_rep1	TRUE	ref/NHEJ_all_gDNA_v5.fasta	pipeline_output/	data/NHEJ_D5_rep1_S1_R1_001.fastq.gz	data/NHEJ_D5_rep1_S1_R2_001.fastq.gz	NNNNNNNNNNNNNNN	None	FALSE	10	TRUE	40G
+NHEJ_rep2	TRUE	ref/NHEJ_all_gDNA_v5.fasta	pipeline_output/	data/NHEJ_D5_rep2_S2_R1_001.fastq.gz	data/NHEJ_D5_rep2_S2_R2_001.fastq.gz	NNNNNNNNNNNNNNN	None	FALSE	10	TRUE	100G
+NHEJ_rep3	TRUE	ref/NHEJ_all_gDNA_v5.fasta	pipeline_output/	data/NHEJ_D5_rep3_combined_R1_001.fastq.gz	data/NHEJ_D5_rep3_combined_R2_001.fastq.gz	NNNNNNNNNNNNNNN	None	FALSE	10	TRUE	50G

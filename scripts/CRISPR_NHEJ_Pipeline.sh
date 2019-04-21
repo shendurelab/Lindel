@@ -18,10 +18,11 @@ echo "Runing UMI_extractor"
 python ${workdir}scripts/UMI_extractor.py -S $samplename -F $read_fwd -R $read_rev -O $outdir --bc_fwd $bc_fwd --bc_rev $bc_rev --umi_correction $umi_correction --threshold $threshold
 
 # Merge and align two fastq files
+# Please update the directory of pear and needleall 
 if [ "$merge" == "TRUE" ]; then
 	echo "Merging paired end reads."
-	pear-0.9.6-bin-32 -f $outdir/${samplename}_fwd.fastq -r $outdir/${samplename}_rev.fastq -o $outdir/${samplename}
+	~/bin/pear-0.9.6-bin-32 -f $outdir/${samplename}_fwd.fastq -r $outdir/${samplename}_rev.fastq -o $outdir/${samplename}
 	rm $outdir/${samplename}.discarded.fastq $outdir/${samplename}.unassembled.forward.fastq $outdir/${samplename}.unassembled.reverse.fastq 
-	needleall $ref $outdir/${samplename}.assembled.fastq -datafile ${workdir}ref/EDNAFULL.modified -gapopen 20 -gapextend 0.5 -aformat3 fasta -awidth3=5000 -outfile $outdir/${samplename}_needleall.fasta
+	~/bin/needleall $ref $outdir/${samplename}.assembled.fastq -datafile ${workdir}ref/EDNAFULL.modified -gapopen 20 -gapextend 0.5 -aformat3 fasta -awidth3=5000 -outfile $outdir/${samplename}_needleall.fasta
 	python ${workdir}scripts/NHEJ_analysis.py $outdir ${samplename} 254
 fi
