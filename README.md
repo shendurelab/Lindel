@@ -1,2 +1,2 @@
 # CRISPR_NHEJ_prediction
-Will's NHEJ prediction project, all codes and data included
+Here are all the codes used to process and analyze the data from Wei Chen et.al biorxiv 2018 Paper.
