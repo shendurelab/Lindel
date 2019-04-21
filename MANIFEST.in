@@ -1,0 +1,3 @@
+include model_prereq.pkl
+include Model_weights.pkl
+Include README.md
