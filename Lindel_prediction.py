@@ -7,13 +7,12 @@
 4. fs is the frameshift ratio for this sequence.
 5. Input should be 65bp and the clevage site should be at 30
 '''
-
+import Lindel, os
 from Lindel.Predictor import * 
 import pickle as pkl
 
-weights = pkl.load(open("Model_weights.pkl",'rb'))
-prerequesites = pkl.load(open('model_prereq.pkl','rb'))
-
+weights = pkl.load(open(os.path.join(Lindel.__path__[0], "Model_weights.pkl"),'rb'))
+prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))
 seq = sys.argv[1].upper() #input your sequence here
 filename = sys.argv[2]
 try:
