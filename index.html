@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="Lindel, A Logistic regression model for accurate indel prediction">
+  <!-- Load required style files
+  <link rel="stylesheet" href="{{ "{{site.baseurl}}/css/main.css" }}">
+  <link rel="stylesheet" href="{{ "{{site.baseurl}}/css/app.css" }}">
+  <link rel="stylesheet" href="{{ "{{site.baseurl}}/css/prism-darcula.css" }}">  -->
+  <link rel="stylesheet" href="http://atlas.gs.washington.edu/mouse-atac/css/main.css" }}">
+  <link rel="stylesheet" href="http://atlas.gs.washington.edu/mouse-atac/node_modules/prismjs/themes/base16-atelierlakeside.light.css" />
+  <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.css">
+
+  <!-- Load required js files-->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <!-- 
+  <script type="text/javascript" src="{{ url_for('static', filename='prism.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='prism.r.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-toc.min.js') }}"></script>-->
+  <title>Lindel Prediction</title>
+</head>
+
+
+<body>
+  <div class="container-fullwidth">
+    <nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <a class="navbar-brand">Lindel</a>
+          <li><a href="{{ site.baseurl }}/docs/">Documentation</a></li>
+          <li><a href="{{ site.baseurl }}/data/">Online tool</a></li>
+          <li><a href="https://github.com/shendurelab/mouse-atac">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    </nav>
+  </div>
+
+  <section class="container fifty" style="max-width: 1000px">
+
+  <div class="hugespacer"></div>
+
+  <script src="http://atlas.gs.washington.edu/mouse-atac/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="http://atlas.gs.washington.edu/mouse-atac/node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+  <script src="http://atlas.gs.washington.edu/mouse-atac/node_modules/prismjs/prism.js"></script>
+  <script src="http://atlas.gs.washington.edu/mouse-atac/node_modules/prismjs/prism.r.js" type="text/javascript"></script>
+  <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.js"></script>
+
+  <script type="text/x-mathjax-config">
+   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
+  <script type="text/javascript" async
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
+
+
+  <footer class="site-footer">
+    <img src="https://brotmanbaty.org/wp-content/uploads/2018/06/BBI_Logo_Horizontal_Grey@2x.png" width=200 align=center>
+    <img src="/static/grouplogo.jpg" width=200 align=center >
+    <img src="/static/hhmi-logo.png" width=200 align=center >
+</footer>
+</body>
+
+</html>

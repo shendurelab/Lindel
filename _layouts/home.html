@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+{% include head.html %}
+
+<body>
+  {% include header.html %}
+
+
+  <div class="container fifty" style="max-width: 950px">
+    <div class="fixOverlayDiv">
+        <h1 align = "left">Lindel</h1>
+        <p class="lead" align = "left">A Logistic regression model for accurate indel prediction induced by Cas9 cleavage.</p>
+    </div>
+    <div class="col-md-12">
+      <img src="images/mouse_atlas.png" alt="..." class="img-responsive centered">
+      <br>
+
+    <div class="text-center">
+    <p class="lead">
+      In our manuscript (<a href="https://www.cell.com/cell/fulltext/S0092-8674(18)30855-9">Wei Chen, et al.</a>)
+    </p>
+
+<div class="hugespacer"></div>
+<div class="hugespacer"></div>
+
+    <div class="text-center">
+    <h2>Downloads</h2>
+    <p class="lead">We have made our primary and secondary data available for the research community along with extensive documentation.</p>
+    <p><a class="btn btn-default" href="{{ site.baseurl }}/data/" role="button">Downloads &raquo;</a></p>
+    </div>
+
+    <div class="hugespacer"></div>
+    <div class="hugespacer"></div>
+
+
+
+    <div class="text-center">
+      <h2>Getting Started Tutorial</h2>
+      <p class="lead">We've put together tutorials on how to get started with analysis of sci-ATAC-seq data.</p>
+      <p><a class="btn btn-default" href="{{ site.baseurl }}/docs/" role="button">Tutorials &raquo;</a></p>
+    </div>
+
+<div class="hugespacer"></div>
+<div class="hugespacer"></div>
+
+  <div class="text-center">
+  <h2>Visualizations</h2>
+  <img src="images/ukbb_viz.png" alt="..." class="img-responsive centered">
+  <p class="lead">We have a few interactive visualization tools in progress to explore some of our results. Currently we have an interactive version of our figure on cell-type specific heritability enrichments for UKBB traits available as an example.</p>
+  <p><a class="btn btn-default" href="{{ site.baseurl }}/ukbb_visualization/" role="button">UKBB Example &raquo;</a></p>
+  </div>
+
+</div>
+
+
+</div>
+
+{% include footer.html %}
+
+</body>
+
+</html>
