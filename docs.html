@@ -25,21 +25,22 @@ tags: [mouse, manual, vignette, atlas]
           <h2>Introduction</h2>
           <p>Lindel is a logistic regression model that predicts all the possible indels (<30 bp) that result from Cas9 induced NHEJ.  It takes an input of 65 bp sequence with the cleavage site located at the 30 bp of the sequence and predicts ~420 unique deletions and all possible 1-2 bp insertions.</a>.</p>
 
+          <h2>Using Lindel</h2>
+          <h3>Webtool</h3>
+          <h3>Integrated in CRISPOR</h3>
+            <p> .</p>
           <h2>Installing Lindel</h2>
-          <p> Lindel has been wrapped as a <code>python</code> package. It includes the functions to parse input sequence and models to predict the frequencies of all indels. Python 3.5 or higher is required to run Lindel. Version for Python 2.7 will come out soon.
+            <p> Lindel has been wrapped as a <code>python</code> package. It includes the functions to parse input sequence and models to predict the frequencies of all indels. Python 3.5 or higher is required to run Lindel. Version for Python 2.7 will come out soon.</p>
           <h3>Install from Github</h3>
 
-          <p>In terminal, type </p>
-          <p> <code>pip install git+https://github.com/shendurelab/Lindel.git</code> </p>
-
-          <p>Now you are able to load Lindel package in <code>python</code></p>
+          <p>In terminal, type <code>pip install git+https://github.com/shendurelab/Lindel.git</code>. This should install the package to your python environment. Now you are able to load Lindel package in <code>python</code></p>
           <div class="spacer"></div>
           <figure class="highlight">
             <pre><code class="language-python" data-lang="python">import Lindel, os
-              from Lindel.Predictor import * 
-              import pickle as pkl
-              weights = pkl.load(open(os.path.join(Lindel.__path__[0], "Model_weights.pkl"),'rb'))
-              prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))
+from Lindel.Predictor import * 
+import pickle as pkl
+weights = pkl.load(open(os.path.join(Lindel.__path__[0], "Model_weights.pkl"),'rb'))
+prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))
             </code></pre>
           </figure>
           <div class="spacer"></div>
