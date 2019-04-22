@@ -23,49 +23,45 @@ tags: [mouse, manual, vignette, atlas]
         <!-- main content area -->
         <div class= "col-sm-8">
           <h2>Introduction</h2>
-          <p>Lindel is a logistic regression model that predicts all the possible indels (<30 bp) that result from Cas9 induced NHEJ.  It takes an input of 65 bp sequence with the cleavage site located at the 30 bp of the sequence and predicts ~420 unique deletions and all possible 1-2 bp insertions.</a>.</p>
+          <p>Lindel is a Logistic regression model for accurate indel prediction induced by Cas9 cleavage. It takes 65 bp sequence (clevage site at 30) as an input and predicts the frequencies for all possible deletions <30 bp, all 1-2 bp insertions, and insertions larger than 2 bp as a group.</p>
+          <p>In this manual, we are going to introduce how Lindel works and how to use it </p>
 
           <h2>Using Lindel</h2>
-          
           <h3>Webtool</h3>
-          <p>We developed a webtool to show the distribution of most frequent <a href="http://crispor.tefor.net/">CRISPOR</a>. </p>
+          <p>We developed a <a href="website here">webtool</a> to show the distribution of most frequent indels. This is just a visualization tool, for more functions and detailed information, please install the package locally to generate full list of indels and frameshift ratio predicted by our tool.</p>
           <h3>Integrated in CRISPOR</h3>
           <p>Lindel has been integrated into guide design tool <a href="http://crispor.tefor.net/">CRISPOR</a>. </p>
           
-          <h3>Installing local Lindel</h3>
-          <p> Lindel has been wrapped as a <code>python</code> package. It includes the functions to parse input sequence and models to predict the frequencies of all indels. Python 3.5 or higher is required to run Lindel. Version for Python 2.7 will come out soon.</p>
+          <h3>Installing local Lindel from Github</h3>
+          <p> Lindel has been wrapped as a <code>python</code> package. It includes the functions to parse input sequence and models to predict the frequencies of all indels.</p>
+          <div class= "panel panel-info">
+            <div class= "panel-heading">
+              <h3 class= "panel-title" data-toc-skip>Requirements</h3>
+            </div>
+            <div class= "panel-body">
+              <p>Requires <code>Python3.5</code> or higher. Compatibility for Python2.7 will release soon.</p>
+              <p>Requires <code>biopython</code>,<code>numpy</code> and <code>scipy</code></p>
+            </div>
+          </div>
 
-            <p>Installing from GithubIn terminal by typing <code>pip install git+https://github.com/shendurelab/Lindel.git</code>. This should install the package to your python environment. Now you are able to load Lindel package in <code>python</code>:</p>
+          <p>In terminal, type:
+          <figure class="highlight">
+            <pre><code class="language-bash" data-lang="bash">pip install git+https://github.com/shendurelab/Lindel.git</code></pre>
+          </figure> 
+          Now you are able to load Lindel package in <code>python</code>:</p>
           <div class="spacer"></div>
           <figure class="highlight">
             <pre><code class="language-python" data-lang="python">import Lindel, os
 from Lindel.Predictor import * 
 import pickle as pkl
 weights = pkl.load(open(os.path.join(Lindel.__path__[0], "Model_weights.pkl"),'rb'))
-prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))
-            </code></pre>
+prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))</code></pre>
           </figure>
           <div class="spacer"></div>
-          <div class= "panel panel-warning">
-            <div class= "panel-heading">
-              <h3 class= "panel-title" data-toc-skip>Performance</h3>
-            </div>
-            <div class= "panel-body">
-              <p>One bottleneck may be the FFT step, which should be readily optimizable using alternative implementations in R or python.</p>
-            </div>
-          </div>
-         <div class= "panel panel-info">
-            <div class= "panel-heading">
-              <h3 class= "panel-title" data-toc-skip>Requirements</h3>
-            </div>
-            <div class= "panel-body">
-              <p>Requires <code>pysam</code> to be installed in your python environment.</p>
-            </div>
-        </div>
     <figure class="highlight">
     <pre><code class="language-bash" data-lang="bash">python get_insert_size_distribution_per_cell.py mybam.bam insert_sizes.txt --barcodes mybarcodes.txt</code></pre>
     </figure>
-    <p>Note that this script relies on being in the same directory as the other scripts provided in the <code>ldscore_regression</code> folder on our Github. Documentation for the script arguments is provided below for reference:</p>
+    <p></p>
 
 <table class = "table">
   <thead>
@@ -76,7 +72,7 @@ prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'
   </thead>
   <tbody>
     <tr>
-      <th><code>--output_directory</code>: </th>
+      <th><code>-</code>: </th>
       <th>Folder to output results to.</th>
     </tr>
   </tbody>
