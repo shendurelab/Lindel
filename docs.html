@@ -39,7 +39,7 @@ tags: [mouse, manual, vignette, atlas]
               <h3 class= "panel-title" data-toc-skip>Requirements</h3>
             </div>
             <div class= "panel-body">
-              <p>Requires <code>Python3.5</code> or higher. Compatibility for Python2.7 will release soon.</p>
+              <p>Requires <code>Python3.5</code> or higher. Compatibility for <code>Python2.7</code> will release soon.</p>
               <p>Requires <code>biopython</code>,<code>numpy</code> and <code>scipy</code></p>
             </div>
           </div>
@@ -47,7 +47,8 @@ tags: [mouse, manual, vignette, atlas]
           <p>In terminal, type:
           <figure class="highlight">
             <pre><code class="language-bash" data-lang="bash">pip install git+https://github.com/shendurelab/Lindel.git</code></pre>
-          </figure> 
+          </figure>
+           
           Now you are able to load Lindel package in <code>python</code>:</p>
           <div class="spacer"></div>
           <figure class="highlight">
@@ -56,27 +57,7 @@ from Lindel.Predictor import *
 import pickle as pkl
 weights = pkl.load(open(os.path.join(Lindel.__path__[0], "Model_weights.pkl"),'rb'))
 prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))</code></pre>
-          </figure>
-          <div class="spacer"></div>
-    <figure class="highlight">
-    <pre><code class="language-bash" data-lang="bash">python get_insert_size_distribution_per_cell.py mybam.bam insert_sizes.txt --barcodes mybarcodes.txt</code></pre>
-    </figure>
-    <p></p>
 
-<table class = "table">
-  <thead>
-    <tr>
-      <th>Argument</th>
-      <th width = "60%">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th><code>-</code>: </th>
-      <th>Folder to output results to.</th>
-    </tr>
-  </tbody>
-</table>
 
 </div>
 </div>
