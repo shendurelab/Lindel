@@ -15,18 +15,22 @@ modified: 2019-04-20
   <div class="container fifty" style="max-width: 1000px">
     <div class="fixOverlayDiv">
         <h1 align = "left">Lindel</h1>
-        <p class="lead" align = "left">A Logistic regression model for accurate indel prediction induced by Cas9 cleavage. Test</p>
+        <p> Lindel is a Logistic regression model for accurate indel prediction induced by Cas9 cleavage. It takes 65 bp sequence (clevage site at 30) as an input and predicts the frequencies for all possible deletions <30 bp, all 1-2 bp insertions, and insertions larger than 2 bp as a group. </p>
+        <p>The scheme below showes the structure of Lindel modeling. It takes the sequence and extracting <b>Sequence features</b> (one-hot encoded 20bp target sequence) and <b>Microhomology features</b> (all possible 1-4 bp microhomology tracts from the input sequencee). The model will use these features to make three predictions: </p>
+        <ul type="1">
+          <li>Overal indel ratio using full <b>Sequence features</b> (384 binary features)</li>
+          <li>21 classes of insertion events using last 6bp <b>Sequence features</b> (104 binary features)</li>
+          <li>536 classes of deletion events using all features</li>
+        </ul>
+        <p> Predicted insertion and deletion frequencies will be weighted by the overall insertion and deletion ratio predicted in part 1. </p>
     </div>
     <div class="col-md-12">
       <img src="images/Modeling_layout.png" alt="..." class="img-responsive centered">
       <br>
-
     <div class="text-center">
     <p class="lead">
-      In our manuscript (<a href="https://www.cell.com/cell/fulltext/S0092-8674(18)30855-9">Wei Chen, et al.</a>)
+      In our manuscript (<a href="https://www.biorxiv.org/content/10.1101/481069v1">Wei Chen, et al.</a>)
     </p>
-
-
 </div>
 
 
