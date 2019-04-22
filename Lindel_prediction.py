@@ -25,6 +25,6 @@ try:
 	    if y_hat[i]!=0:
 	        pred_freq[rev_index[i]] = y_hat[i]
 	pred_sorted = sorted(pred_freq.items(), key=lambda kv: kv[1],reverse=True)
-	werite_file(seq,pred_sorted,pred_freq,filename)
+	write_file(seq,pred_sorted,pred_freq,filename)
 except ValueError:
     return ('Error: No PAM sequence is identified.')
