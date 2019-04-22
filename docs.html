@@ -14,7 +14,6 @@ tags: [mouse, manual, vignette, atlas]
   https://afeld.github.io/bootstrap-toc/ -->
   <body  data-spy= "scroll" data-target= "#toc">
     {% include header.html %}
-
     <div class= "container">
       <div class= "row">
         <!-- sidebar, which will move to the top on a small screen -->
@@ -23,91 +22,47 @@ tags: [mouse, manual, vignette, atlas]
         </div>
         <!-- main content area -->
         <div class= "col-sm-8">
+          <h2>Introduction</h2>
+          <p>Lindel is a logistic regression model that predicts all the possible indels (<30 bp) that result from Cas9 induced NHEJ.  It takes an input of 65 bp sequence with the cleavage site located at the 30 bp of the sequence and predicts ~420 unique deletions and all possible 1-2 bp insertions.</a>.</p>
 
-    <h2>Data Availability and Github</h2>
-    <p>In several portions of this tutorial we may call out files on our <a href="/data/">downloads page</a>. Any python scripts referenced in this tutorial are available on our <a href="https://github.com/shendurelab/mouse-atac">Github page</a>.</p>
+          <h2>Installing Lindel</h2>
+          <p> Lindel has been wrapped as a <code>python</code> package. It includes the functions to parse input sequence and models to predict the frequencies of all indels. Python 3.5 or higher is required to run Lindel. Version for Python 2.7 will come out soon.
+          <h3>Install from Github</h3>
 
-    <h2>Installing</h2>
-    <p> <a href="https://github.com/shendurelab/fly-atac">Fly ATAC Github</a>. Documentation on various downstream steps can be found in our 
+          <p>In terminal, type </p>
+          <p> <code>pip install git+https://github.com/shendurelab/Lindel.git</code> </p>
 
-    <p>Below we document some of the most important and generalizable methods that are unique to this study.</p>
-
-    <p></p>
-
-    <p>This format is readable in <code>R</code>:</p>
-      <div class="spacer"></div>
-
-    <code>python</code>  
-    <code>scipy</code> 
-
-    <figure class="highlight">
-    <pre><code class="language-python" data-lang="python">
-        import csv
-        your python code heres
-    </code></pre>
-    </figure>
-
-  <div class="spacer"></div>
-
-         <div class= "panel panel-warning">
+          <p>Now you are able to load Lindel package in <code>python</code></p>
+          <div class="spacer"></div>
+          <figure class="highlight">
+            <pre><code class="language-python" data-lang="python">import Lindel, os
+              from Lindel.Predictor import * 
+              import pickle as pkl
+              weights = pkl.load(open(os.path.join(Lindel.__path__[0], "Model_weights.pkl"),'rb'))
+              prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))
+            </code></pre>
+          </figure>
+          <div class="spacer"></div>
+          <div class= "panel panel-warning">
             <div class= "panel-heading">
-            <h3 class= "panel-title" data-toc-skip>Performance</h3>
+              <h3 class= "panel-title" data-toc-skip>Performance</h3>
             </div>
             <div class= "panel-body">
-        <p>The current implementation of the scripts below is a proof of concept and could use further performance optimization to reduce runtimes for datasets with many cells.
-
-        <p>As such, we recommend using a whitelist of cell barcodes to limit computations to non-background cells (cells that meet your reads per cell threshold and other quality control steps). This file, a text file with one cell barcode per line, can be provided with the <code>--barcodes</code> argument in both scripts below.</p>
-
-        <p>One bottleneck may be the FFT step, which should be readily optimizable using alternative implementations in R or python.</p>
-
+              <p>One bottleneck may be the FFT step, which should be readily optimizable using alternative implementations in R or python.</p>
             </div>
           </div>
          <div class= "panel panel-info">
             <div class= "panel-heading">
-            <h3 class= "panel-title" data-toc-skip>Requirements</h3>
+              <h3 class= "panel-title" data-toc-skip>Requirements</h3>
             </div>
             <div class= "panel-body">
-<p>Requires <code>pysam</code> to be installed in your python environment.</p>
+              <p>Requires <code>pysam</code> to be installed in your python environment.</p>
             </div>
-          </div>
-
+        </div>
     <figure class="highlight">
     <pre><code class="language-bash" data-lang="bash">python get_insert_size_distribution_per_cell.py mybam.bam insert_sizes.txt --barcodes mybarcodes.txt</code></pre>
     </figure>
-
-    <h3>Generating Banding Scores</h3>
-    Using <code>insert_sizes.txt</code> as input, you can then generate banding scores.
-
-    <div class="spacer"></div>
-
-         <div class= "panel panel-info">
-            <div class= "panel-heading">
-            <h3 class= "panel-title" data-toc-skip>Requirements</h3>
-            </div>
-            <div class= "panel-body">
-<p>Script requires <code>dplyr</code> and <code>argparse</code> to be installed in your R environment.</p>
-            </div>
-          </div>
-
-
-        <figure class="highlight">
-        <pre><code class="language-bash" data-lang="bash">python ldscore_regression/ldscore_peaks.py \
-    --output_directory outputs \
-    --sample_sheet samplesheet.txt \
-    --sumstats sumstats.txt \
-    --master_peaks all_peaks.bed \
-    --ldsc_path ldsc.py \
-    --lift_over_path liftOver \
-    --liftover_chain hg19ToMm9.over.chain.gz \
-    --baseline_prefix ldsc/1000G_Phase3_baseline_v1.1/baseline. \
-    --annot_template_prefix ldsc/1000G_Phase3_cell_type_groups/cell_type_group.1 \
-    --bfile_prefix ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC \
-    --hapmap_snps_prefix ldsc/hapmap3_snps/hm \
-    --ld_score_prefix ldsc/1000G_Phase3_weights_hm3_no_MHC/weights.hm3_noMHC \
-    --frqfile_prefix ldsc/1000G_Phase3_frq/1000G.EUR.QC</code></pre>
-        </figure>
-
-<p>Note that this script relies on being in the same directory as the other scripts provided in the <code>ldscore_regression</code> folder on our Github. Documentation for the script arguments is provided below for reference:</p>
+    <p>Note that this script relies on being in the same directory as the other scripts provided in the <code>ldscore_regression</code> folder on our Github. Documentation for the script arguments is provided below for reference:</p>
 
 <table class = "table">
   <thead>
@@ -116,67 +71,13 @@ tags: [mouse, manual, vignette, atlas]
       <th width = "60%">Description</th>
     </tr>
   </thead>
-<tbody>
+  <tbody>
     <tr>
       <th><code>--output_directory</code>: </th>
       <th>Folder to output results to.</th>
     </tr>
-    <tr>
-      <th><code>--sample_sheet</code></th>
-      <th>A TSV file with columns <code>sample_id</code> and <code>sites</code>, which are a name for a sample (say a cluster ID, for example) and a BED file with sites to use for enrichment testing (cell type differentially accessible peaks, for example).</th>
-    </tr>
-    <tr>
-      <th><code>--sumstats</code></th>
-      <th>A TSV file with columns <code>phenotype</code> and <code>sumstats</code> that are a name for the phenotype and the path to a <code>.sumstats.gz</code> file respectively.</th>
-    </tr>
-    <tr>
-      <th><code>--master_peaks</code></th>
-      <th>A BED file with all peaks in the entire dataset vs. just the specific ones. Not really necessary at this point, but the script does require this argument.</th>
-    </tr>
-    <tr>
-      <th><code>--liftover_path</code></th>
-      <th>path to liftOver utility as downloaded from UCSC.</th>
-    </tr>
-    <tr>
-      <th><code>--liftover_chain</code></th>
-      <th>A liftover chain file such as <code>hg19ToMm9.over.chain.gz</code> or other chains available via <a href="http://hgdownload.cse.ucsc.edu/goldenPath/hg19/liftOver/">UCSC</a>.</th>
-    </tr>
-    <tr>
-      <th><code>--ldsc_path</code></th>
-      <th>path to ldsc.py from LD score regression installation.</th>
-    </tr>
-    <tr>
-        <th><code>--score_sumstats_options</code></th>
-        <th>Optional string containing options for use with LDSC in scoring sumstats files. Must start with a space and be quoted. Example: " --chisq-max 99999999999"</th>
-    <tr>
-        <th><code>--baseline_prefix</code></th>
-        <th>Prefix of baseline model for use with LDSC, such as <code>ldsc/1000G_Phase3_baseline_v1.1/baseline.</code>, for example. We had to rerun the basline model ourselves rather than use the one provided for download, but it may be different in your case.</th>
-    </tr>
-    <tr>
-        <th><code>--annot_template_prefix</code></th>
-        <th>Prefix for <code>.annot.gz</code> files provided with LD score regression. <code>ldsc/1000G_Phase3_cell_type_groups/cell_type_group.1</code> in our case.</th>
-    </tr>
-    <tr>
-        <th><code>--bfile_prefix</code></th>
-        <th>Prefix for files used in <code>--bfile</code> argument to LD score regression. <code>ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC</code> in our case.</th>
-    </tr>
-    <tr>
-        <th><code>--hapmap_snps_prefix</code></th>
-        <th>Prefix for files used in <code>--hapmap_snps</code> argument to LD score regression. <code>ldsc/hapmap3_snps/hm</code> in our case.</th>
-    </tr>
-    <tr>
-        <th><code>--ld_score_prefix</code></th>
-        <th>Prefix for <code>--w-ld-chr</code> argument to LD score regression. <code>ldsc/1000G_Phase3_weights_hm3_no_MHC/weights.hm3_noMHC</code> in our case.</th>
-    </tr>
-    <tr>
-        <th><code>--frqfile_prefix</code></th>
-        <th>Prefix for <code>--frqfile-chr</code> argument used with LD score regression. <code>ldsc/1000G_Phase3_frq/1000G.EUR.QC</code> in our case.</th>
-    </tr>
-
-</tbody>
+  </tbody>
 </table>
-
-<p>As written, the script outputs several directories <code>make_template_files</code>, <code>train_models</code>, and <code>score_sumstats</code> that contain files that are inputs or outputs of LD score regression commands. It also contains a file <code>results_gathered.txt</code>, which contains various statistics aggregated from all LD score regression results. See LD score regression documentation for more information on reported statistics.</p>
 
 </div>
 </div>
