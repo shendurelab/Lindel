@@ -46,7 +46,7 @@ cd Lindel
 python setup.py install</code></pre>
           </figure>
           <p> We provide a simple test python code <code>Lindel_prediction.py</code> for you to test your target sequence. It uses 60-65 bp sequence (30 bp upstream and 30-35 bp downstream of the cleavage site) and a filename as input, and outputs the file listing all possible indels and the frameshift ratio.</p>
-	      <figure class="highlight">
+          <figure class="highlight">
             <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
           </figure>
           <p> The output file should look like the table below, showing the indels, frequencies and locations. The location is relative distance to the cleavage site, with negative values for upstream and non-negative values for downstream.</p>
@@ -73,27 +73,33 @@ python setup.py install</code></pre>
                   <th>D1</th>
                   <th>0</th>
                 </tr>
-          		<tr>
+              <tr>
                   <th>...AACGCCTATATTAAAGCGAC X CGTCGGTTGAACTGCGTGGA...</th>
                   <th>8.77</th>
                   <th>I3+X</th>
                   <th></th>
                 </tr>   
-          		<tr>
+              <tr>
                   <th>...AACGCCTATATTAAAGCGAC C CGTCGGTTGAACTGCGTGGA...</th>
                   <th>6.07</th>
                   <th>I1+C</th>
                   <th></th>
                 </tr>     
-          		<tr>
+              <tr>
                   <th>...AACGCCTATATTAAAGCG-- | -----GTTGAACTGCGTGGA...</th>
                   <th>3.96</th>
                   <th>D7</th>
                   <th>-2</th>
                 </tr>                              
             </tbody>
-	      </table>
-        </font>
+          </table>
+          </font>
+          <h2>Lindel Performance</h2>
+          <p> Two other tools (<a href="https://partslab.sanger.ac.uk/FORECasT#results/">ForeCasT</a> and <a href="https://indelphi.giffordlab.mit.edu/">inDelphi</a>) are also available to predict the relative frequencies of indels. Lindel compares favorably to the other tools. </p>
+          <div class="text-center">
+            <img src="images/Performance.png">
+          </div>
+
 </div>
 </div>
 </div>
