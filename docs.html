@@ -39,25 +39,20 @@ tags: [mouse, manual, vignette, atlas]
               <h3 class= "panel-title" data-toc-skip>Requirements</h3>
             </div>
             <div class= "panel-body">
-              <p>Requires <code>Python3.5</code> or higher. Compatibility for <code>Python2.7</code> will release soon.</p>
+              <p>Compatible with both <code>Python2.7</code> and <code>Python3.5</code> or higher.</p>
               <p>Requires <code>biopython</code>,<code>numpy</code> and <code>scipy</code></p>
             </div>
           </div>
-
-          <p>In terminal, type:
+          <p>In terminal, type:</p>
           <figure class="highlight">
-            <pre><code class="language-bash" data-lang="bash">pip install git+https://github.com/shendurelab/Lindel.git</code></pre>
+            <pre><code class="language-bash" data-lang="bash">git clone https://github.com/shendurelab/Lindel.git 
+cd Lindel
+python setup.py install</code></pre>
           </figure>
-           
-          Now you are able to load Lindel package in <code>python</code>:</p>
-          <div class="spacer"></div>
-          <figure class="highlight">
-            <pre><code class="language-python" data-lang="python">import Lindel, os
-from Lindel.Predictor import * 
-import pickle as pkl
-weights = pkl.load(open(os.path.join(Lindel.__path__[0], "Model_weights.pkl"),'rb'))
-prerequesites = pkl.load(open(os.path.join(Lindel.__path__[0],'model_prereq.pkl'),'rb'))</code></pre>
-
+          <p> We provide a simple test python code <code>Lindel_prediction.py</code> for you to test your target sequence. It uses 60-65 bp sequence (30 bp upstream and 30-35 bp downstream of the cleavage site) and a filename as input, and outputs the file listing all possible indels and the frameshift ratio.</p>
+	      <figure class="highlight">
+            <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
+          </figure>
 
 </div>
 </div>
