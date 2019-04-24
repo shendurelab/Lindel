@@ -309,7 +309,7 @@ def write_file(seq,array,freq,fname):
                 indels.append('I3' + '+' + bp)
             s = seq[0:ss+17]+' '+bp+' '*(2-len(bp))+seq[ss+17:]
         sequences.append(s)
-        frequency.append("{0:.2f}".format(freq[pt]*100))
+        frequency.append("{0:.8f}".format(freq[pt]*100))
     f0 = open(fname,'w')
     for s,f,i in zip(sequences,frequency,indels):
         f0.write(s+'\t'+f + '\t'+i +'\n')
