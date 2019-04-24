@@ -47,10 +47,10 @@ python setup.py install</code></pre>
           </figure>
           <p> We provide a simple test python code <code>Lindel_prediction.py</code> for you to test your target sequence. It uses 60-65 bp sequence (30 bp upstream and 30-35 bp downstream of the cleavage site) and a filename as input, and outputs the file listing all possible indels and the frameshift ratio.</p>
 	      <figure class="highlight">
-            <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py ...AACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGA... test_seq</code></pre>
+            <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
           </figure>
           <p> The output file should look like the table below, showing the indel in sequence, it's frequency and location. The location is represented as distance to the cleavage site, negative values means upstream and 0 or positive values means downstream.</p>
-          <table class = "table">
+          <table class = "table" style='font-family:"Courier New", Courier, monospace'>
           	<thead>
           		<tr>
                   <th>...AACGCCTATATTAAAGCGAC | CGTCGGTTGAACTGCGTGGA...</th>
