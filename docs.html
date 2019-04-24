@@ -49,7 +49,7 @@ python setup.py install</code></pre>
 	      <figure class="highlight">
             <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
           </figure>
-          <p> The output file should look like the table below, showing the indel in sequence, it's frequency and location. The location is represented as distance to the cleavage site, negative values means upstream and 0 or positive values means downstream.</p>
+          <p> The output file should look like the table below, showing the indels, frequencies and locations. The location is relative distance to the cleavage site, with negative values for upstream and non-negative values for downstream.</p>
           <font size="2">
           <table class = "table" style='font-family:"Courier New", Courier, monospace; font-size: 9'>
           	<thead>
