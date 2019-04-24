@@ -53,7 +53,49 @@ python setup.py install</code></pre>
 	      <figure class="highlight">
             <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
           </figure>
-
+          <p> The output file should look like the table below, showing the indel in sequence, it's frequency and location. The location is represented as distance to the cleavage site, negative values means upstream and 0 or positive values means downstream.</p>
+          <table class = "table">
+          	<thead>
+          		<tr>
+                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC | CGTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>Frequency</th>
+                  <th>Indel size</th>
+                  <th>Indel start site</th>
+                </tr>
+            </thead>
+            <tbody>
+          		<tr>
+                  <th>TAACGTTATCAACGCCTATATTAAAGCG-- | --TCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>30.90</th>
+                  <th>D4</th>
+                  <th>-2</th>
+                </tr>
+           		<tr>
+                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC | -GTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>16.37</th>
+                  <th>D1</th>
+                  <th>0</th>
+                </tr>
+          		<tr>
+                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC X CGTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>8.77</th>
+                  <th>I3+X</th>
+                  <th></th>
+                </tr>   
+          		<tr>
+                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC C CGTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>6.07</th>
+                  <th>I1+C</th>
+                  <th></th>
+                </tr>     
+          		<tr>
+                  <th>TAACGTTATCAACGCCTATATTAAAGCG-- | -----GTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>3.96</th>
+                  <th>D7</th>
+                  <th>-2</th>
+                </tr>                              
+            </tbody>
+	      </table>
 </div>
 </div>
 </div>
