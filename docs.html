@@ -51,13 +51,13 @@ python setup.py install</code></pre>
           </figure>
           <p> We provide a simple test python code <code>Lindel_prediction.py</code> for you to test your target sequence. It uses 60-65 bp sequence (30 bp upstream and 30-35 bp downstream of the cleavage site) and a filename as input, and outputs the file listing all possible indels and the frameshift ratio.</p>
 	      <figure class="highlight">
-            <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
+            <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py ...AACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGA... test_seq</code></pre>
           </figure>
           <p> The output file should look like the table below, showing the indel in sequence, it's frequency and location. The location is represented as distance to the cleavage site, negative values means upstream and 0 or positive values means downstream.</p>
           <table class = "table">
           	<thead>
           		<tr>
-                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC | CGTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>...AACGCCTATATTAAAGCGAC | CGTCGGTTGAACTGCGTGGA...</th>
                   <th>Frequency</th>
                   <th>Indel size</th>
                   <th>Indel start site</th>
@@ -65,31 +65,31 @@ python setup.py install</code></pre>
             </thead>
             <tbody>
           		<tr>
-                  <th>TAACGTTATCAACGCCTATATTAAAGCG-- | --TCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>...AACGCCTATATTAAAGCG-- | --TCGGTTGAACTGCGTGGA...</th>
                   <th>30.90</th>
                   <th>D4</th>
                   <th>-2</th>
                 </tr>
            		<tr>
-                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC | -GTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>...AACGCCTATATTAAAGCGAC | -GTCGGTTGAACTGCGTGGA...</th>
                   <th>16.37</th>
                   <th>D1</th>
                   <th>0</th>
                 </tr>
           		<tr>
-                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC X CGTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>...AACGCCTATATTAAAGCGAC X CGTCGGTTGAACTGCGTGGA...</th>
                   <th>8.77</th>
                   <th>I3+X</th>
                   <th></th>
                 </tr>   
           		<tr>
-                  <th>TAACGTTATCAACGCCTATATTAAAGCGAC C CGTCGGTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>...AACGCCTATATTAAAGCGAC C CGTCGGTTGAACTGCGTGGA...</th>
                   <th>6.07</th>
                   <th>I1+C</th>
                   <th></th>
                 </tr>     
           		<tr>
-                  <th>TAACGTTATCAACGCCTATATTAAAGCG-- | -----GTTGAACTGCGTGGATCAATGCGTC</th>
+                  <th>...AACGCCTATATTAAAGCG-- | -----GTTGAACTGCGTGGA...</th>
                   <th>3.96</th>
                   <th>D7</th>
                   <th>-2</th>
