@@ -15,7 +15,7 @@ def gen_indel(sequence,cut_site):
             if len(sequence) > dlen+dstart > cut_site-2:
                 seq = sequence[0:dstart]+sequence[dstart+dlen:]
                 indel = sequence[0:dstart] + '-'*dlen + sequence[dstart+dlen:]
-                array = [indel,sequence,13,'del',dstart-30,dlen,None,None]
+                array = [indel,sequence,13,'del',dstart-30,dlen,None,None,None]
                 try: 
                     uniqe_seq[seq]
                     if dstart-30 <1:
