@@ -9,7 +9,7 @@ def gen_indel(sequence,cut_site):
     down = sequence[cut_site:]
     dmax = min(len(up),len(down))
     uniqe_seq ={}
-    #dlen,dstart,dstop = 
+    # List all possible unique indels
     for dstart in range(1,cut_site+3):
         for dlen in range(1,dmax):
             if len(sequence) > dlen+dstart > cut_site-2:
@@ -34,12 +34,17 @@ def gen_indel(sequence,cut_site):
             try: uniqe_seq[seq] = array
             except KeyError:uniqe_seq[seq] = array
     uniq_align = label_mh(list(uniqe_seq.values()),4)
+    for read in uniq_align:
+        if read[-2]=='mh':
+            merged=[]
+            for i in range(0,read[-1]+1):
+                merged.append((read[4]-i,read[5]))
+            read[-3] = merged
     return uniq_align
 
 def label_mh(sample,mh_len):
     for k in range(len(sample)):
         read = sample[k]
-        sample[k][-2] = None
         if read[3] == 'del':
             idx = read[2] + read[4] +17
             idx2 = idx + read[5]
@@ -71,6 +76,8 @@ def create_feature_array(ft,uniq_indels):
             except KeyError:
                 pass
     return ft_array
+
+
 #convert to single and di-nucleotide hotencode
 def onehotencoder(seq):
     nt= ['A','T','C','G']
@@ -124,12 +131,13 @@ def gen_prediction(seq,wb,prereq):
 def softmax(weights):
     return (np.exp(weights)/sum(np.exp(weights)))
 
-def gen_cmatrix(indels,label):
+def gen_cmatrix(indels,label): 
+# Combine redundant classes based on microhomology
     combine = []
     for s in indels:
         if s[-2] == 'mh':
             tmp = []
-            for k in s[-1]:
+            for k in s[-3]:
                 try:
                     tmp.append(label['+'.join(list(map(str,k)))])
                 except KeyError:
