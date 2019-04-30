@@ -4,12 +4,13 @@ import re
 import json
 
 def gen_indel(sequence,cut_site):
+    '''This is the function that used to generate all possible unique indels and 
+    list the redundant classes which will be combined after'''
     nt = ['A','T','C','G']
     up = sequence[0:cut_site]
     down = sequence[cut_site:]
     dmax = min(len(up),len(down))
     uniqe_seq ={}
-    # List all possible unique indels
     for dstart in range(1,cut_site+3):
         for dlen in range(1,dmax):
             if len(sequence) > dlen+dstart > cut_site-2:
@@ -43,6 +44,7 @@ def gen_indel(sequence,cut_site):
     return uniq_align
 
 def label_mh(sample,mh_len):
+    '''Function to label microhomology in deletion events'''
     for k in range(len(sample)):
         read = sample[k]
         if read[3] == 'del':
@@ -60,7 +62,9 @@ def label_mh(sample,mh_len):
 
 
 def create_feature_array(ft,uniq_indels):
-    #require the features and label 
+    '''Used to create microhomology feature array 
+       require the features and label 
+    '''
     ft_array = np.zeros(len(ft))
     for read in uniq_indels:
         if read[-2] == 'mh':
@@ -78,8 +82,8 @@ def create_feature_array(ft,uniq_indels):
     return ft_array
 
 
-#convert to single and di-nucleotide hotencode
 def onehotencoder(seq):
+    '''convert to single and di-nucleotide hotencode'''
     nt= ['A','T','C','G']
     head = []
     l = len(seq)
@@ -111,6 +115,7 @@ def create_label_array(lb,ep_freq,seq):
 
 
 def gen_prediction(seq,wb,prereq):
+    '''generate the prediction for all classes, redundant classes will be combined'''
     pam = {'AGG':0,'TGG':0,'CGG':0,'GGG':0}
     guide = seq[13:33]
     if seq[33:36] not in pam:
@@ -132,7 +137,7 @@ def softmax(weights):
     return (np.exp(weights)/sum(np.exp(weights)))
 
 def gen_cmatrix(indels,label): 
-# Combine redundant classes based on microhomology
+''' Combine redundant classes based on microhomology, matrix operation'''
     combine = []
     for s in indels:
         if s[-2] == 'mh':
