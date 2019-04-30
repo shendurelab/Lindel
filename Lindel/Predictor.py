@@ -1,4 +1,3 @@
-from Bio import pairwise2
 import numpy as np
 import scipy.sparse as sparse
 import re
@@ -15,65 +14,58 @@ def gen_indel(sequence,cut_site):
         for dlen in range(1,dmax):
             if len(sequence) > dlen+dstart > cut_site-2:
                 seq = sequence[0:dstart]+sequence[dstart+dlen:]
-                try: uniqe_seq[seq] += 1
-                except KeyError: uniqe_seq[seq] = 1 
+                indel = sequence[0:dstart] + '-'*dlen + sequence[dstart+dlen:]
+                array = [indel,sequence,13,'del',dstart-30,dlen,None,None]
+                try: 
+                    uniqe_seq[seq]
+                    if dstart-30 <1:
+                        uniqe_seq[seq] = array
+                except KeyError: uniqe_seq[seq] = array
     for base in nt:
         seq = sequence[0:cut_site]+base+sequence[cut_site:]
-        try: uniqe_seq[seq] += 1
-        except KeyError: uniqe_seq[seq] = 1 
+        indel = sequence[0:cut_site]+'-'+sequence[cut_site:]
+        array = [sequence,indel,13,'ins',0,1,base,None,None]
+        try: uniqe_seq[seq] = array
+        except KeyError: uniqe_seq[seq] = array
         for base2 in nt:
             seq = sequence[0:cut_site] + base + base2 + sequence[cut_site:]
-            try: uniqe_seq[seq] += 1
-            except KeyError: uniqe_seq[seq] = 1 
-    uniq_align = []
-    for key in uniqe_seq:
-        ali = pairwise2.align.globalms(key, sequence,5,-4,-13,-0.3)
-        array = [None]*15    
-        if len(sequence)-len(key)==1:
-            array[0:2] = ali[0][0], ali[0][1]
-        else:
-            array[0:2] = ali[-1][0], ali[-1][1]
-        array[8] = cut_site-17
-        uniq_align.append(array)
-    uniq_align = assign_indel(np.array(uniq_align))
-    uniq_align = label_mh(uniq_align,4)
-    for read in uniq_align:
-        if read[-2]=='mh':
-            merged=[]
-            for i in range(0,read[2]+1):
-                merged.append((read[10]-i,read[11]))
-            read[-1] = merged
+            indel = sequence[0:cut_site]+'--'+sequence[cut_site:]
+            array = [sequence,indel,13,'ins',0,2,base+base2,None,None]
+            try: uniqe_seq[seq] = array
+            except KeyError:uniqe_seq[seq] = array
+    uniq_align = label_mh(list(uniqe_seq.values()),4)
     return uniq_align
 
 def label_mh(sample,mh_len):
     for k in range(len(sample)):
         read = sample[k]
         sample[k][-2] = None
-        if read[9] == 'del':
-            idx = read[8] + int(read[10]) +17
-            idx2 = idx + read[11]
-            x = mh_len if read[11] > mh_len else read[11]
+        if read[3] == 'del':
+            idx = read[2] + read[4] +17
+            idx2 = idx + read[5]
+            x = mh_len if read[5] > mh_len else read[5]
             for i in range(x,0,-1):
-                if read[1][idx-i:idx] == read[1][idx2-i:idx2] and i <= read[11]:
+                if read[1][idx-i:idx] == read[1][idx2-i:idx2] and i <= read[5]:
                     sample[k][-2] = 'mh'
-                    sample[k][2] = i
+                    sample[k][-1] = i
                     break
             if sample[k][-2]!='mh':
-                sample[k][2]=0
+                sample[k][-1]=0
     return sample
+
 
 def create_feature_array(ft,uniq_indels):
     #require the features and label 
     ft_array = np.zeros(len(ft))
     for read in uniq_indels:
         if read[-2] == 'mh':
-            mh = str(read[10]) + '+' + str(read[11]) + '+' + str(read[2])
+            mh = str(read[4]) + '+' + str(read[5]) + '+' + str(read[-1])
             try:
                 ft_array[ft[mh]] = 1
             except KeyError:
                 pass
         else:
-            pt = str(read[10]) + '+' + str(read[11]) + '+' + str(0)
+            pt = str(read[4]) + '+' + str(read[5]) + '+' + str(0)
             try:
                 ft_array[ft[pt]]=1
             except KeyError:
@@ -110,89 +102,6 @@ def create_label_array(lb,ep_freq,seq):
         lb_array[lb[pt]] = ep_freq[seq]['ins'][pt]
     return lb_array
 
-
-def assign_indel(array):
-    for i in range(len(array)):
-        read  = array[i,0]
-        ref   = array[i,1]
-        ss,cs = array[i,8], array[i,8] +17 # Define start site of the target
-        s1,s2 = re.split('[AGCTN]+',ref), re.split('[AGCTN]+',read)
-        if '-' in read:
-            pattern = s2[1]
-            loc = list(re.search(r"\b"+pattern, read).span())
-            y1 = set(range(cs-15,cs+20))
-            x=set(range(loc[0],loc[1]))
-            if x.intersection(y1):
-                array[i,9:12] = 'del',loc[0]-cs,loc[1]-loc[0]
-    # Label insertion
-        elif '-' in ref:
-            pattern = s1[1]
-            loc = list(re.search(r"\b"+pattern+r"\b", ref).span())
-            y1 = set(range(cs-15,cs+15))
-            x=set(range(loc[0],loc[1]))
-            if x.intersection(y1):
-                array[i,9:13] = 'ins',loc[0]-cs,loc[1]-loc[0],read[loc[0]:loc[1]]
-    # Step 6 For 1bp deletion, alignment index changed
-    for i in range(len(array)):
-        if array[i,9]=='del' and array[i,11]==1:
-            read  = array[i,0]
-            ref   = array[i,1]
-            s1, s2 = read.replace('-',''),ref.replace('-','')
-            ali = pairwise2.align.globalms(s1, s2,5,-4,-13,-0.3)
-            if len(ali)>1:
-                array[i,0:2] = ali[0][0],ali[0][1]
-                read  = array[i,0]
-                ref   = array[i,1]
-                ss = array[i,8]
-                cs = ss + 17 # Define start site of the target
-                s1,s2 = re.split('[AGCTN]+',ref), re.split('[AGCTN]+',read)
-                if '-' in read:
-                    pattern = s2[1]
-                    loc = list(re.search(r"\b"+pattern, read).span())
-                    y1 = set(range(cs-15,cs+15))
-                    x=set(range(loc[0],loc[1]))
-                    if x.intersection(y1):
-                        array[i,9:12] = 'del',loc[0]-cs,loc[1]-loc[0]
-
-    for i in range(len(array)):
-        if array[i,10]>0:
-            read  = array[i,0]
-            ref   = array[i,1]
-            s1, s2 = read.replace('-',''),ref.replace('-','')
-            ali = pairwise2.align.globalms(s1, s2,5,-4,-13,-0.3)
-            if len(ali)>1:
-                shift = array[i,10]
-                if len(ali)>shift:
-                    if array[i,11]>1 or array[i,9]=='ins':
-                        array[i,0:2] = ali[-1-shift][0],ali[-1-shift][1]
-                    else:
-                        array[i,0:2] = ali[0+shift][0],ali[0+shift][1]
-                elif len(ali)<=shift:
-                    if array[i,11]>1:
-                        array[i,0:2] = ali[0][0],ali[0][1]
-                    else:
-                        array[i,0:2] = ali[-1][0],ali[-1][1]
-                read  = array[i,0]
-                ref   = array[i,1]
-                ss = array[i,8]
-                cs = ss +17 # Define start site of the target
-                s1,s2 = re.split('[AGCTN]+',ref), re.split('[AGCTN]+',read)
-                if '-' in read:
-                    pattern = s2[1]
-                    loc = list(re.search(r"\b"+pattern, read).span())
-                    y1 = set(range(cs-5,cs+5))
-                    x=set(range(loc[0],loc[1]))
-                    if x.intersection(y1):
-                        array[i,9:12] = 'del',loc[0]-cs,loc[1]-loc[0]
-    # Label insertion
-                elif '-' in ref:
-                    pattern = s1[1]
-                    loc = list(re.search(r"\b"+pattern+r"\b", ref).span())
-                    y1 = set(range(cs-5,cs+5))
-                    x=set(range(loc[0],loc[1]))
-                    if x.intersection(y1):
-                        array[i,9:13] = 'ins',loc[0]-cs,loc[1]-loc[0],read[loc[0]:loc[1]]
-    return array
 
 def gen_prediction(seq,wb,prereq):
     pam = {'AGG':0,'TGG':0,'CGG':0,'GGG':0}

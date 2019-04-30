@@ -11,11 +11,11 @@ setuptools.setup(
     description="A package for Lindel",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/shendurelab/CRISPR_NHEJ_prediction/tree/master/scripts",
+    url="https://github.com/shendurelab/Lindel/tree/master/scripts",
     packages=['Lindel'],
     package_dir={'Lidel': 'Lindel'},
     package_data={'Lindel': ['data/*.pkl']},
-    install_requires=['biopython','numpy','scipy'],
+    install_requires=['numpy','scipy'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
