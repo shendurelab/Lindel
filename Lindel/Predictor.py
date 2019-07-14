@@ -137,7 +137,7 @@ def softmax(weights):
     return (np.exp(weights)/sum(np.exp(weights)))
 
 def gen_cmatrix(indels,label): 
-''' Combine redundant classes based on microhomology, matrix operation'''
+	''' Combine redundant classes based on microhomology, matrix operation'''
     combine = []
     for s in indels:
         if s[-2] == 'mh':
