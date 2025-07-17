@@ -16,7 +16,7 @@ A Flask-based web service that provides:
 - Batch prediction endpoint (up to 100 sequences)
 - Full web interface with templates and styling
 
-### 2. Standalone Batch Processing Script (`Lindel_batch.py`)
+### 2. Standalone Batch Processing Script (`Lindel_prediction.py`)
 
 A command-line tool for processing sequences locally:
 
@@ -25,17 +25,17 @@ A command-line tool for processing sequences locally:
 
 ```bash
 # Single sequence prediction
-python lindel_batch.py -s ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGAGGCGATCGATCGATCGATCG
+python Lindel_prediction.py -s ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGAGGCGATCGATCGATCGATCG
 
 # Batch processing from file
-python lindel_batch.py -f example_sequences.txt -o results.tsv
+python Lindel_prediction.py -f example_sequences.txt -o results.tsv
 
 # Output in different formats
-python lindel_batch.py -f input.txt -o results.json --format json
-python lindel_batch.py -f input.txt -o results.csv --format csv
+python Lindel_prediction.py -f input.txt -o results.json --format json
+python Lindel_prediction.py -f input.txt -o results.csv --format csv
 
 # Control number of top predictions
-python lindel_batch.py -f input.txt -o results.tsv --top 10
+python Lindel_prediction.py -f input.txt -o results.tsv --top 10
 ```
 
 #### Input File Format
