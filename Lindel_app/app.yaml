@@ -1,2 +1,2 @@
-runtime: python39
+runtime: python312
 entrypoint: gunicorn -b :$PORT Lindel_app:app
