@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+
+<body>
+{% include 'header.html' %}
+<div class="content">
+    <div class="container main-block">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 text-center">
+                <label for="seq" style="font-size: 20px;">Target DNA sequence</label>
+                <input id="seq" name="seq" required size="60" type="text" value="" class="form-control" placeholder="Enter a 60bp DNA sequence" style="font-size: 14px; margin: 10px 0;">
+                <!-- Error message div -->
+                <div id="error-message" style="color:#FB8072; display: none; margin-top: 10px;"></div>
+                <div class="mt-3">
+                    <button type="button" id="show-example" onclick="showExample()" class="btn btn-secondary" style="font-size: 14px; margin: 5px;">Example</button>
+                    <button type="submit" onclick="submit_sequence()" id="submit-seq" class="btn btn-primary" style="font-size: 14px; margin: 5px;">Submit</button>
+                    <button type="button" hidden="True" id="download-report" class="btn btn-success" style="font-size: 12px; margin: 5px;">Download</button>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12" id="graph" style="width: 100%; margin: 0px auto;"></div>
+        </div>
+        <!-- Added blank space -->
+        <div id="blank-space" style="height: 600px;"></div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% include 'footer.html' %}
+</body>
+</html>

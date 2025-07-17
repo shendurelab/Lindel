@@ -1,0 +1,12 @@
+name: lindel-app
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.12
+  - flask=2.3.2
+  - flask-cors=4.0.0
+  - numpy=1.26.4
+  - scipy=1.13.0
+  - gunicorn=21.2.0
+  - flask-limiter=3.5.0

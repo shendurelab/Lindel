@@ -1,0 +1,33 @@
+.hugespacer {
+    height: 50px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  color: #1f2c39;
+  padding: 0 0;
+}
+.subfooter {
+  background: #333F48;
+  opacity: .91;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.subfooter .subfooter-logo {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 29px;
+}
+.subfooter .subfooter-logo.sl-left img {
+  height: 20px;
+  display: block;
+}
+.subfooter .subfooter-logo.sl-mid img {
+  height: 48px;
+  display: block;
+}
+.subfooter .subfooter-logo.sl-right img {
+  height: 30px;
+  display: block;
+}
