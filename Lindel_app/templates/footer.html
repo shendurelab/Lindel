@@ -1,10 +1,18 @@
-<footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-center">
-        <p>&copy; 2024 Lindel. All rights reserved.</p>
-        <p>
-            <a href="https://www.bbi.uw.edu/"><img src="{{ url_for('static', filename='img/bbi_logo.png') }}" alt="BBI Logo" height="40"></a>
-            <a href="https://www.hhmi.org/"><img src="{{ url_for('static', filename='img/hhmi-logo.png') }}" alt="HHMI Logo" height="40"></a>
-            <a href="https://moles.washington.edu/"><img src="{{ url_for('static', filename='img/MolES_logo.png') }}" alt="MolES Logo" height="40"></a>
-        </p>
-    </div>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<footer class="site-footer">
+    <center>
+        <div class="wrapper">
+            <img src="{{ url_for('static', filename = 'img/newlogo2.png') }}" width=150 align=center >
+        <img src="{{ url_for('static', filename = 'img/hhmi-logo.png') }}" width=150 align=center >
+        <img src="{{ url_for('static', filename = 'img/grouplogo.jpg') }}" width=150 align=center >
+        <img src="{{ url_for('static', filename = 'img/bbi_logo.png') }}" width=150 align=center >
+        <img src="{{ url_for('static', filename = 'img/MolES_logo.png') }}" width=150 align=center >
+        </div>
+    </center>
 </footer>
