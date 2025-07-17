@@ -2,45 +2,42 @@ import numpy as np
 import scipy.sparse as sparse
 import re
 import json
+import itertools
 
-def gen_indel(sequence,cut_site):
-    '''This is the function that used to generate all possible unique indels and 
-    list the redundant classes which will be combined after'''
-    nt = ['A','T','C','G']
-    up = sequence[0:cut_site]
+def gen_indel(sequence: str, cut_site: int) -> list:
+    """
+    Generates all possible unique indels and lists the redundant classes
+    which will be combined after.
+    """
+    nt = ['A', 'T', 'C', 'G']
+    up = sequence[:cut_site]
     down = sequence[cut_site:]
-    dmax = min(len(up),len(down))
-    uniqe_seq ={}
-    for dstart in range(1,cut_site+3):
-        for dlen in range(1,dmax):
-            if len(sequence) > dlen+dstart > cut_site-2:
-                seq = sequence[0:dstart]+sequence[dstart+dlen:]
-                indel = sequence[0:dstart] + '-'*dlen + sequence[dstart+dlen:]
-                array = [indel,sequence,13,'del',dstart-30,dlen,None,None,None]
-                try: 
-                    uniqe_seq[seq]
-                    if dstart-30 <1:
-                        uniqe_seq[seq] = array
-                except KeyError: uniqe_seq[seq] = array
-    for base in nt:
-        seq = sequence[0:cut_site]+base+sequence[cut_site:]
-        indel = sequence[0:cut_site]+'-'+sequence[cut_site:]
-        array = [sequence,indel,13,'ins',0,1,base,None,None]
-        try: uniqe_seq[seq] = array
-        except KeyError: uniqe_seq[seq] = array
-        for base2 in nt:
-            seq = sequence[0:cut_site] + base + base2 + sequence[cut_site:]
-            indel = sequence[0:cut_site]+'--'+sequence[cut_site:]
-            array = [sequence,indel,13,'ins',0,2,base+base2,None,None]
-            try: uniqe_seq[seq] = array
-            except KeyError:uniqe_seq[seq] = array
-    uniq_align = label_mh(list(uniqe_seq.values()),4)
+    dmax = min(len(up), len(down))
+    unique_seq = {}
+
+    # Deletions
+    for dstart in range(1, cut_site + 3):
+        for dlen in range(1, dmax):
+            if cut_site - 2 < dstart + dlen < len(sequence):
+                seq = sequence[:dstart] + sequence[dstart + dlen:]
+                indel = sequence[:dstart] + '-' * dlen + sequence[dstart + dlen:]
+                array = [indel, sequence, 13, 'del', dstart - 30, dlen, None, None, None]
+                if seq not in unique_seq or dstart - 30 < 1:
+                    unique_seq[seq] = array
+
+    # Insertions
+    for length in range(1, 3):
+        for bases in itertools.product(nt, repeat=length):
+            base_str = "".join(bases)
+            seq = sequence[:cut_site] + base_str + sequence[cut_site:]
+            indel = sequence[:cut_site] + '-' * length + sequence[cut_site:]
+            array = [sequence, indel, 13, 'ins', 0, length, base_str, None, None]
+            unique_seq[seq] = array
+
+    uniq_align = label_mh(list(unique_seq.values()), 4)
     for read in uniq_align:
-        if read[-2]=='mh':
-            merged=[]
-            for i in range(0,read[-1]+1):
-                merged.append((read[4]-i,read[5]))
-            read[-3] = merged
+        if read[-2] == 'mh':
+            read[-3] = [(read[4] - i, read[5]) for i in range(read[-1] + 1)]
     return uniq_align
 
 def label_mh(sample,mh_len):
@@ -82,27 +79,31 @@ def create_feature_array(ft,uniq_indels):
     return ft_array
 
 
-def onehotencoder(seq):
-    '''convert to single and di-nucleotide hotencode'''
-    nt= ['A','T','C','G']
-    head = []
+def onehotencoder(seq: str) -> np.ndarray:
+    """Converts sequence to single and di-nucleotide one-hot encoding."""
+    nt = ['A', 'T', 'C', 'G']
     l = len(seq)
-    for k in range(l):
-        for i in range(4):
-            head.append(nt[i]+str(k))
+    
+    # Pre-calculate sizes for efficiency
+    single_nt_size = len(nt) * l
+    di_nt_size = len(nt) * len(nt) * (l - 1)
+    total_size = single_nt_size + di_nt_size
 
-    for k in range(l-1):
-        for i in range(4):
-            for j in range(4):
-                head.append(nt[i]+nt[j]+str(k))
-    head_idx = {}
-    for idx,key in enumerate(head):
-        head_idx[key] = idx
-    encode = np.zeros(len(head_idx))
-    for j in range(l):
-        encode[head_idx[seq[j]+str(j)]] =1.
-    for k in range(l-1):
-        encode[head_idx[seq[k:k+2]+str(k)]] =1.
+    # Create a mapping from nucleotide/dinucleotide to index
+    head_idx = {char + str(i): i * len(nt) + j for i in range(l) for j, char in enumerate(nt)}
+    offset = single_nt_size
+    for i in range(l - 1):
+        for j, char1 in enumerate(nt):
+            for k, char2 in enumerate(nt):
+                head_idx[char1 + char2 + str(i)] = offset + i * (len(nt) * len(nt)) + j * len(nt) + k
+
+    # Create the one-hot encoded array
+    encode = np.zeros(total_size)
+    for j, char in enumerate(seq):
+        encode[head_idx[char + str(j)]] = 1.0
+    for k in range(l - 1):
+        encode[head_idx[seq[k:k+2] + str(k)]] = 1.0
+        
     return encode
 
 def create_label_array(lb,ep_freq,seq):
@@ -156,83 +157,57 @@ def gen_cmatrix(indels,label):
             temp[i,i]=0    
     return (sparse.csr_matrix(temp))
 
-def write_json(seq,array,freq):
-    sequences,frequency,indels = [],[],[]
+def format_predictions(seq: str, pred_sorted: list, pred_freq: dict, output_type: str = 'json', fname: str = None):
+    """Formats predictions into JSON or a file."""
+    output_data = []
     ss = 13
-    sequences.append(seq[0:30] + ' | '+ seq[30:60])
-    frequency.append('0')
-    indels.append('')
-    for i in range(len(array)):
-        pt = array[i][0]
+    cs = ss + 17
+    # Add the original sequence information first
+    output_data.append({
+        "Sequence": f"{seq[:30]} | {seq[30:60]}",
+        "Frequency": "0",
+        "Indels": ""
+    })
+
+    for pt, freq in pred_sorted:
         try:
-            idx1,dl = map(int,pt.split('+'))
-            idx1 += ss+17
+            idx1, dl = map(int, pt.split('+'))
+            indel_type = f"D{dl}  {idx1 - 30}"
+            idx1 += cs
             idx2 = idx1 + dl
-            cs = ss+17
             if idx1 < cs:
-                if idx2>=cs:
-                    s = seq[0:idx1]+'-'*(cs-idx1) + ' ' + '|' + ' ' + '-'*(idx2-cs)+seq[idx2:]
+                if idx2 >= cs:
+                    s = f"{seq[:idx1]}{'-' * (cs - idx1)} | {'-' * (idx2 - cs)}{seq[idx2:]}"
                 else:
-                    s = seq[0:idx1]+'-'*(idx2-idx1) + seq[idx2:cs]  + ' ' + '|' + ' ' + seq[cs:]
+                    s = f"{seq[:idx1]}{'-' * (idx2 - idx1)}{seq[idx2:cs]} | {seq[cs:]}"
             elif idx1 > cs:
-                s = seq[0:cs]+' ' + '|' + ' '+ seq[cs:idx1]+'-'*int(dl)+seq[idx2:]
+                s = f"{seq[:cs]} | {seq[cs:idx1]}{'-' * dl}{seq[idx2:]}"
             else:
-                s = seq[0:idx1]+ ' ' + '|' + ' ' +'-'*int(dl)+seq[idx2:]
-            indels.append('D' + str(dl) + '  ' +str(idx1-30))            
+                s = f"{seq[:idx1]} | {'-' * dl}{seq[idx2:]}"
         except ValueError:
             idx1 = int(pt.split('+')[0])
-            if pt!='3':
+            if pt != '3':
                 bp = pt.split('+')[1]
                 il = str(idx1)
-                indels.append('I' +il +'+' + bp)
+                indel_type = f"I{il}+{bp}"
             else:
-                bp ='X' # label any insertion >= 3bp as X
+                bp = 'X'  # label any insertion >= 3bp as X
                 il = '>=3'
-                indels.append('I3' + '+' + bp)
-            s = seq[0:ss+17]+' '+bp+' '*(2-len(bp))+seq[ss+17:]
-        sequences.append(s)
-        frequency.append("{0:.2f}".format(freq[pt]*100))
-    output = [{"Sequence": s, "Frequency": f, "Indels": i} for s,f,i in zip(sequences,frequency,indels)]
-    return (json.dumps(output, indent=1))
+                indel_type = f"I3+{bp}"
+            s = f"{seq[:cs]} {bp}{' ' * (2 - len(bp))}{seq[cs:]}"
+        
+        output_data.append({
+            "Sequence": s,
+            "Frequency": f"{freq * 100:.2f}",
+            "Indels": indel_type
+        })
 
+    if output_type == 'json':
+        return json.dumps(output_data, indent=1)
+    elif output_type == 'file' and fname:
+        with open(fname, 'w') as f:
+            for item in output_data:
+                f.write(f"{item['Sequence']}\t{item['Frequency']}\t{item['Indels']}\n")
+    else:
+        return None
 
-def write_file(seq,array,freq,fname):
-    sequences,frequency,indels = [],[],[]
-    ss = 13
-    sequences.append(seq[0:30] + ' | '+ seq[30:60])
-    frequency.append('0')
-    indels.append('')
-    for i in range(len(array)):
-        pt = array[i][0]
-        try:
-            idx1,dl = map(int,pt.split('+'))
-            idx1 += ss+17
-            idx2 = idx1 + dl
-            cs = ss+17
-            if idx1 < cs:
-                if idx2>=cs:
-                    s = seq[0:idx1]+'-'*(cs-idx1) + ' ' + '|' + ' ' + '-'*(idx2-cs)+seq[idx2:]
-                else:
-                    s = seq[0:idx1]+'-'*(idx2-idx1) + seq[idx2:cs]  + ' ' + '|' + ' ' + seq[cs:]
-            elif idx1 > cs:
-                s = seq[0:cs]+' ' + '|' + ' '+ seq[cs:idx1]+'-'*int(dl)+seq[idx2:]
-            else:
-                s = seq[0:idx1]+ ' ' + '|' + ' ' +'-'*int(dl)+seq[idx2:]
-            indels.append('D' + str(dl) + '  ' +str(idx1-30))            
-        except ValueError:
-            idx1 = int(pt.split('+')[0])
-            if pt!='3':
-                bp = pt.split('+')[1]
-                il = str(idx1)
-                indels.append('I' +il +'+' + bp)
-            else:
-                bp ='X' # label any insertion >= 3bp as X
-                il = '>=3'
-                indels.append('I3' + '+' + bp)
-            s = seq[0:ss+17]+' '+bp+' '*(2-len(bp))+seq[ss+17:]
-        sequences.append(s)
-        frequency.append("{0:.8f}".format(freq[pt]*100))
-    f0 = open(fname,'w')
-    for s,f,i in zip(sequences,frequency,indels):
-        f0.write(s+'\t'+f + '\t'+i +'\n')
-    f0.close()
