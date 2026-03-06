@@ -14,10 +14,10 @@ modified: 2019-04-20
   <div class="container fifty" style="max-width: 1000px">
     <div class="fixOverlayDiv">
         <h1 align = "left">Lindel</h1>
-        <p> Lindel is a Logistic regression model for accurate indel prediction induced by Cas9 cleavage. It takes 65 bp sequence (clevage site at 30) as an input and predicts the frequencies for all possible deletions <30 bp, all 1-2 bp insertions, and insertions larger than 2 bp as a group. </p>
-        <p>The scheme below showes the structure of Lindel modeling. It takes the sequence and extracting <b>Sequence features</b> (one-hot encoded 20bp target sequence) and <b>Microhomology features</b> (all possible 1-4 bp microhomology tracts from the input sequencee). The model will use these features to make three predictions: </p>
+        <p> Lindel is a Logistic regression model for accurate indel prediction induced by Cas9 cleavage. It takes 65 bp sequence (cleavage site at 30) as an input and predicts the frequencies for all possible deletions <30 bp, all 1-2 bp insertions, and insertions larger than 2 bp as a group. </p>
+        <p>The scheme below shows the structure of Lindel modeling. It takes the sequence and extracting <b>Sequence features</b> (one-hot encoded 20bp target sequence) and <b>Microhomology features</b> (all possible 1-4 bp microhomology tracts from the input sequence). The model will use these features to make three predictions: </p>
         <ul>
-          <li>Overal indel ratio using full <b>Sequence features</b> (384 binary features)</li>
+          <li>Overall indel ratio using full <b>Sequence features</b> (384 binary features)</li>
           <li>21 classes of insertion events using last 6bp <b>Sequence features</b> (104 binary features)</li>
           <li>536 classes of deletion events using all features (3033 binary features)</li>
         </ul>
@@ -26,7 +26,7 @@ modified: 2019-04-20
     </div>
     
     <div class="col-md-12">
-      <img src="images/Modeling_layout.png" alt="..." class="img-responsive centered">
+      <img src="images/Modeling_layout.png" alt="Lindel modeling layout showing sequence features and microhomology features used to predict indel frequencies" class="img-responsive centered">
       <br>
     </div>
 

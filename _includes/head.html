@@ -5,19 +5,14 @@
    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
   <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
-  <!-- <link rel="icon" href="../../favicon.ico"> -->
-  <title>Theme Template for Bootstrap</title>
   <link rel="stylesheet" href="{{site.baseurl}}/css/main.css" />
   <link rel="stylesheet" href="{{site.baseurl}}/css/app.css" />
   <link rel="stylesheet" href="{{site.baseurl}}/css/prism-darcula.css"/> 
-  <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v0.4.1/dist/bootstrap-toc.min.css">
 
   <!-- Load required js files-->
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
   <script type="text/javascript" src="{{site.baseurl}}/js/jquery.min.js"></script>
   <script type="text/javascript" src="{{site.baseurl}}/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="{{site.baseurl}}/js/prism.js"></script>
-  <script type="text/javascript" src="{{site.baseurl}}/js/prism.r.js"></script>
-  <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v0.4.1/dist/bootstrap-toc.min.js"></script>
  </head>

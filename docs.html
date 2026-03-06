@@ -19,7 +19,7 @@ permalink: /docs/
         <!-- main content area -->
         <div class= "col-sm-8">
           <h2>Introduction</h2>
-          <p>Lindel is a Logistic regression model for accurate indel prediction induced by Cas9 cleavage. It takes 65 bp sequence (clevage site at 30) as an input and predicts the frequencies for all possible deletions <30 bp, all 1-2 bp insertions, and insertions larger than 2 bp as a group.</p>
+          <p>Lindel is a Logistic regression model for accurate indel prediction induced by Cas9 cleavage. It takes 65 bp sequence (cleavage site at 30) as an input and predicts the frequencies for all possible deletions <30 bp, all 1-2 bp insertions, and insertions larger than 2 bp as a group.</p>
           <p>In this manual, we are going to introduce how Lindel works and how to use it </p>
 
           <h2>Using Lindel</h2>
@@ -47,11 +47,10 @@ python setup.py install</code></pre>
           </figure>
           <p> We provide a simple test python code <code>Lindel_prediction.py</code> for you to test your target sequence. It uses 60-65 bp sequence (30 bp upstream and 30-35 bp downstream of the cleavage site) and a filename as input, and outputs the file listing all possible indels and the frameshift ratio.</p>
           <figure class="highlight">
-            <pre><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
+            <pre style="font-size: 12px"><code class="language-bash" data-lang="bash">python Lindel_prediction.py TAACGTTATCAACGCCTATATTAAAGCGACCGTCGGTTGAACTGCGTGGATCAATGCGTC test_seq</code></pre>
           </figure>
           <p> The output file should look like the table below, showing the indels, frequencies and locations. The location is relative distance to the cleavage site, with negative values for upstream and non-negative values for downstream.</p>
-          <font size="2">
-          <table class = "table" style='font-family:"Courier New", Courier, monospace; font-size: 9'>
+          <table class="table" style='font-family:"Courier New", Courier, monospace; font-size: 13px'>
           	<thead>
           		<tr>
                   <th>...AACGCCTATATTAAAGCGAC | CGTCGGTTGAACTGCGTGGA...</th>
@@ -62,42 +61,41 @@ python setup.py install</code></pre>
             </thead>
             <tbody>
           		<tr>
-                  <th>...AACGCCTATATTAAAGCG-- | --TCGGTTGAACTGCGTGGA...</th>
-                  <th>30.90</th>
-                  <th>D4</th>
-                  <th>-2</th>
+                  <td>...AACGCCTATATTAAAGCG-- | --TCGGTTGAACTGCGTGGA...</td>
+                  <td>30.90</td>
+                  <td>D4</td>
+                  <td>-2</td>
                 </tr>
            		<tr>
-                  <th>...AACGCCTATATTAAAGCGAC | -GTCGGTTGAACTGCGTGGA...</th>
-                  <th>16.37</th>
-                  <th>D1</th>
-                  <th>0</th>
+                  <td>...AACGCCTATATTAAAGCGAC | -GTCGGTTGAACTGCGTGGA...</td>
+                  <td>16.37</td>
+                  <td>D1</td>
+                  <td>0</td>
                 </tr>
               <tr>
-                  <th>...AACGCCTATATTAAAGCGAC X CGTCGGTTGAACTGCGTGGA...</th>
-                  <th>8.77</th>
-                  <th>I3+X</th>
-                  <th></th>
-                </tr>   
+                  <td>...AACGCCTATATTAAAGCGAC X CGTCGGTTGAACTGCGTGGA...</td>
+                  <td>8.77</td>
+                  <td>I3+X</td>
+                  <td></td>
+                </tr>
               <tr>
-                  <th>...AACGCCTATATTAAAGCGAC C CGTCGGTTGAACTGCGTGGA...</th>
-                  <th>6.07</th>
-                  <th>I1+C</th>
-                  <th></th>
-                </tr>     
+                  <td>...AACGCCTATATTAAAGCGAC C CGTCGGTTGAACTGCGTGGA...</td>
+                  <td>6.07</td>
+                  <td>I1+C</td>
+                  <td></td>
+                </tr>
               <tr>
-                  <th>...AACGCCTATATTAAAGCG-- | -----GTTGAACTGCGTGGA...</th>
-                  <th>3.96</th>
-                  <th>D7</th>
-                  <th>-2</th>
-                </tr>                              
+                  <td>...AACGCCTATATTAAAGCG-- | -----GTTGAACTGCGTGGA...</td>
+                  <td>3.96</td>
+                  <td>D7</td>
+                  <td>-2</td>
+                </tr>
             </tbody>
           </table>
-          </font>
           <h2>Lindel Performance</h2>
           <p> Two other tools (<a href="https://partslab.sanger.ac.uk/FORECasT#results/">ForeCasT</a> and <a href="https://indelphi.giffordlab.mit.edu/">inDelphi</a>) are also available to predict the relative frequencies of indels. Lindel compares favorably to the other tools. </p>
           <div class="text-center">
-            <img src="{{site.baseurl}}/images/Performance.png">
+            <img src="{{site.baseurl}}/images/Performance.png" alt="Performance comparison of Lindel against ForeCasT and inDelphi indel prediction tools">
           </div>
 
 </div>
