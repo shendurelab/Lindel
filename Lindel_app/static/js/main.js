@@ -97,7 +97,7 @@ var plottable = function(plotobj) {
         xaxis: {domain: [0.7, 1], anchor: 'y1', showticklabels: true, fixedrange: true},
         yaxis: {domain: [0, 0.95], autorange: 'reversed', anchor: 'x1', showticklabels: false, fixedrange: true},
     };
-    Plotly.plot('graph', total, layout);
+    Plotly.newPlot('graph', total, layout);
 }
 
 function downloadCSV(plotobj) {
