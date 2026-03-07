@@ -11,7 +11,7 @@ function submit_sequence() {
 
     $.ajax({
         method: 'POST',
-        url: "http://127.0.0.1:5000/predict",
+        url: "/predict",
         data: {'string': document.getElementById('seq').value},
         success: function(response) {
             obj = JSON.parse(response);
