@@ -1,0 +1,3 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['gcloud', 'app', 'deploy', 'Lindel_app/app.yaml', '--quiet']

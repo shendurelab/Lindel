@@ -19,6 +19,10 @@ function submit_sequence() {
                 // Hide the blank space div
                 document.getElementById('blank-space').style.display = 'none';
                 plottable(obj);
+                // Show download button and wire up click handler
+                var dlBtn = document.getElementById('download-report');
+                dlBtn.hidden = false;
+                dlBtn.onclick = function() { downloadCSV(obj); };
             });
         },
         error: function(response) {
@@ -94,4 +98,22 @@ var plottable = function(plotobj) {
         yaxis: {domain: [0, 0.95], autorange: 'reversed', anchor: 'x1', showticklabels: false, fixedrange: true},
     };
     Plotly.plot('graph', total, layout);
+}
+
+function downloadCSV(plotobj) {
+    var header = ['Sequence', 'Frequency', 'Indels'];
+    var rows = [header.join(',')];
+    for (var i = 1; i < plotobj.length; i++) {
+        var seq = '"' + plotobj[i][header[0]].replace(/"/g, '""') + '"';
+        var freq = plotobj[i][header[1]];
+        var indel = plotobj[i][header[2]].split(' ')[0];
+        rows.push(seq + ',' + freq + ',' + indel);
+    }
+    var csv = rows.join('\n');
+    var blob = new Blob([csv], {type: 'text/csv'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'lindel_predictions.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
 }
